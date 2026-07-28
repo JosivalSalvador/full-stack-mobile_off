@@ -66,8 +66,7 @@ jobs:
               --base main \
               --title "ci(auto): merge dev into main" \
               --body "## Automated Pull Request
-          This PR was automatically created by the CI workflow after all tests and checks passed on \`dev\`." \
-              --label "automated pr"
+          This PR was automatically created by the CI workflow after all tests and checks passed on \`dev\`."
           else
-            echo "Já existe um PR aberto (#$EXISTING_PR) de dev para main. Atualizações na dev serão refletidas nele."
+            echo "Já existe um PR aberto (#$EXISTING_PR) de dev para main."
           fi
