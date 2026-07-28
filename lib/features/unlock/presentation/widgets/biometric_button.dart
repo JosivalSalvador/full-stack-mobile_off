@@ -18,7 +18,7 @@ class BiometricButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final status = ref.watch(unlockProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return AppButton(
       label: l10n.unlockButtonLabel,
