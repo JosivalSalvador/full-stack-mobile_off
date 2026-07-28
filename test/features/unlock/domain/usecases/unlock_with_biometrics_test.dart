@@ -56,25 +56,27 @@ void main() {
     expect((result as Failed).reason, 'Authentication was cancelled.');
   });
 
-  test('returns Failed with a specific message on LocalAuthException',
-      () async {
-    when(mockLocalAuth.isDeviceSupported()).thenAnswer((_) async => true);
-    when(
-      mockLocalAuth.authenticate(
-        localizedReason: anyNamed('localizedReason'),
-      ),
-    ).thenThrow(
-      const LocalAuthException(
-        code: LocalAuthExceptionCode.noBiometricHardware,
-      ),
-    );
+  test(
+    'returns Failed with a specific message on LocalAuthException',
+    () async {
+      when(mockLocalAuth.isDeviceSupported()).thenAnswer((_) async => true);
+      when(
+        mockLocalAuth.authenticate(
+          localizedReason: anyNamed('localizedReason'),
+        ),
+      ).thenThrow(
+        const LocalAuthException(
+          code: LocalAuthExceptionCode.noBiometricHardware,
+        ),
+      );
 
-    final result = await usecase();
+      final result = await usecase();
 
-    expect(result, isA<Failed>());
-    expect(
-      (result as Failed).reason,
-      'No biometrics or device PIN are set up on this device.',
-    );
-  });
+      expect(result, isA<Failed>());
+      expect(
+        (result as Failed).reason,
+        'No biometrics or device PIN are set up on this device.',
+      );
+    },
+  );
 }

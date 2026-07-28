@@ -5,13 +5,11 @@ import 'package:keymory_off/features/unlock/domain/models/unlock_status.dart';
 import 'package:keymory_off/features/unlock/presentation/controllers/unlock_provider.dart';
 import 'package:keymory_off/l10n/app_localizations.dart';
 
-
 /// The button used on the unlock screen to trigger a biometric unlock
-  /// attempt.
-  ///
-  /// Reads the unlock provider to show a loading state while unlocking, and
-  /// disables itself once already unlocked.
-
+/// attempt.
+///
+/// Reads the unlock provider to show a loading state while unlocking, and
+/// disables itself once already unlocked.
 
 class BiometricButton extends ConsumerWidget {
   /// Creates a [BiometricButton].

@@ -42,8 +42,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('does not call onPressed while isLoading is true',
-      (tester) async {
+  testWidgets('does not call onPressed while isLoading is true', (
+    tester,
+  ) async {
     var tapped = false;
 
     await tester.pumpWidget(

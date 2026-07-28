@@ -25,7 +25,9 @@ class VaultRepository {
     required String passwordHash,
     required int createdAt,
   }) {
-    return _database.into(_database.vaultMetadata).insertOnConflictUpdate(
+    return _database
+        .into(_database.vaultMetadata)
+        .insertOnConflictUpdate(
           VaultMetadataCompanion.insert(
             id: const Value(1),
             salt: salt,

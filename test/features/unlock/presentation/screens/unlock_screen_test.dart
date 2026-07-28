@@ -25,8 +25,9 @@ Widget _buildApp(ProviderScope providerScope) {
 }
 
 void main() {
-  testWidgets('displays the localized title and the unlock button',
-      (tester) async {
+  testWidgets('displays the localized title and the unlock button', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _buildApp(const ProviderScope(child: UnlockScreen())),
     );
@@ -35,8 +36,9 @@ void main() {
     expect(find.byType(BiometricButton), findsOneWidget);
   });
 
-  testWidgets('shows the failure reason after a failed unlock attempt',
-      (tester) async {
+  testWidgets('shows the failure reason after a failed unlock attempt', (
+    tester,
+  ) async {
     final mockLocalAuth = MockLocalAuthentication();
     when(mockLocalAuth.isDeviceSupported()).thenAnswer((_) async => false);
 
@@ -62,8 +64,9 @@ void main() {
     );
   });
 
-  testWidgets('does not show a failure message before any attempt',
-      (tester) async {
+  testWidgets('does not show a failure message before any attempt', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _buildApp(const ProviderScope(child: UnlockScreen())),
     );
