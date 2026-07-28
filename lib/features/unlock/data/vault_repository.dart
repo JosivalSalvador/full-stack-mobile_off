@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
-
-import '../../../core/database/app_database.dart';
+import 'package:keymory_off/core/database/app_database.dart';
 
 /// Provides access to the vault's configuration row (salt, password hash,
 /// and creation timestamp) stored in [AppDatabase].
@@ -8,6 +7,7 @@ import '../../../core/database/app_database.dart';
 /// This table holds exactly zero or one row: there is only ever a single
 /// vault per device.
 class VaultRepository {
+  /// Creates a [VaultRepository] backed by the given [_database].
   VaultRepository(this._database);
 
   final AppDatabase _database;

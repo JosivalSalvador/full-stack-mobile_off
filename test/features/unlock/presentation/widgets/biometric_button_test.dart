@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:keymory_off/features/unlock/domain/models/unlock_status.dart';
 import 'package:keymory_off/features/unlock/domain/usecases/unlock_with_biometrics.dart';
 import 'package:keymory_off/features/unlock/presentation/controllers/unlock_provider.dart';
 import 'package:keymory_off/features/unlock/presentation/widgets/biometric_button.dart';
@@ -11,25 +10,26 @@ import 'package:mockito/mockito.dart';
 
 import '../../domain/usecases/unlock_with_biometrics_test.mocks.dart';
 
+Widget _buildApp(ProviderScope providerScope) {
+  return MaterialApp(
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: providerScope,
+  );
+}
+
 void main() {
-  Widget buildApp({required List<Override> overrides}) {
-    return ProviderScope(
-      overrides: overrides,
-      child: const MaterialApp(
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(body: BiometricButton()),
+  testWidgets('displays the localized unlock label', (tester) async {
+    await tester.pumpWidget(
+      _buildApp(
+        const ProviderScope(child: Scaffold(body: BiometricButton())),
       ),
     );
-  }
-
-  testWidgets('displays the localized unlock label', (tester) async {
-    await tester.pumpWidget(buildApp(overrides: []));
 
     expect(find.text('Unlock with biometrics'), findsOneWidget);
   });
@@ -46,12 +46,15 @@ void main() {
     );
 
     await tester.pumpWidget(
-      buildApp(
-        overrides: [
-          unlockWithBiometricsProvider.overrideWithValue(
-            UnlockWithBiometrics(localAuth: mockLocalAuth),
-          ),
-        ],
+      _buildApp(
+        ProviderScope(
+          overrides: [
+            unlockWithBiometricsProvider.overrideWithValue(
+              UnlockWithBiometrics(localAuth: mockLocalAuth),
+            ),
+          ],
+          child: const Scaffold(body: BiometricButton()),
+        ),
       ),
     );
 
@@ -73,12 +76,15 @@ void main() {
     ).thenAnswer((_) async => true);
 
     await tester.pumpWidget(
-      buildApp(
-        overrides: [
-          unlockWithBiometricsProvider.overrideWithValue(
-            UnlockWithBiometrics(localAuth: mockLocalAuth),
-          ),
-        ],
+      _buildApp(
+        ProviderScope(
+          overrides: [
+            unlockWithBiometricsProvider.overrideWithValue(
+              UnlockWithBiometrics(localAuth: mockLocalAuth),
+            ),
+          ],
+          child: const Scaffold(body: BiometricButton()),
+        ),
       ),
     );
 
