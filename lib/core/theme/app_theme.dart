@@ -8,16 +8,16 @@ abstract final class AppTheme {
 
   /// The light theme, used by default unless the device requests dark mode.
   static ThemeData get light => ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: _seedColor),
-      );
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(seedColor: _seedColor),
+  );
 
   /// The dark theme, used when the device is set to dark mode.
   static ThemeData get dark => ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: _seedColor,
-          brightness: Brightness.dark,
-        ),
-      );
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: _seedColor,
+      brightness: Brightness.dark,
+    ),
+  );
 }

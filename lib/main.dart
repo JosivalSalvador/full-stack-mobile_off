@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:keymory_off/core/router/app_router.dart';
 import 'package:keymory_off/core/theme/app_theme.dart';
 import 'package:keymory_off/l10n/app_localizations.dart';
@@ -30,7 +31,7 @@ class KeymoryApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
     );
   }
 }

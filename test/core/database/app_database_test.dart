@@ -26,7 +26,9 @@ void main() {
     });
 
     test('stores and retrieves a row', () async {
-      await database.into(database.vaultMetadata).insert(
+      await database
+          .into(database.vaultMetadata)
+          .insert(
             VaultMetadataCompanion.insert(
               salt: 'test-salt',
               passwordHash: 'test-hash',

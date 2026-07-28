@@ -24,5 +24,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unlockFailed => 'Falha na autenticação. Tente novamente.';
 
   @override
-  String get unlockBiometricsUnavailable => 'Biometria não disponível neste dispositivo.';
+  String get unlockBiometricsUnavailable =>
+      'Biometria não disponível neste dispositivo.';
 }

@@ -10,7 +10,7 @@ class DateFormatter {
   /// The locale used to format dates (e.g. `'en'`, `'pt'`).
   final String localeName;
 
-/// Formats [millisecondsSinceEpoch] as a full, localized date, such as
+  /// Formats [millisecondsSinceEpoch] as a full, localized date, such as
   /// "July 27, 2026" (en) or "27 de julho de 2026" (pt).
   ///
   /// [millisecondsSinceEpoch] is assumed to be in UTC (as stored in the

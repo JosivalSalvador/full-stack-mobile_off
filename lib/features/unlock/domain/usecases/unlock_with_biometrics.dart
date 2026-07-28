@@ -12,7 +12,7 @@ class UnlockWithBiometrics {
   /// Creates an [UnlockWithBiometrics] use case, optionally overriding the
   /// [LocalAuthentication] instance (mainly useful for testing).
   UnlockWithBiometrics({LocalAuthentication? localAuth})
-      : _localAuth = localAuth ?? LocalAuthentication();
+    : _localAuth = localAuth ?? LocalAuthentication();
 
   final LocalAuthentication _localAuth;
 

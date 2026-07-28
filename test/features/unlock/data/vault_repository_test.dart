@@ -63,8 +63,7 @@ void main() {
   });
 
   group('saveVaultMetadata', () {
-    test('overwrites the existing row instead of creating a new one',
-        () async {
+    test('overwrites the existing row instead of creating a new one', () async {
       await repository.saveVaultMetadata(
         salt: 'first-salt',
         passwordHash: 'first-hash',
