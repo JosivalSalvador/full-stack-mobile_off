@@ -1,0 +1,51 @@
+name: keymory_off
+description: "A local, offline-first password manager."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^3.3.2
+  riverpod_annotation: ^4.0.3
+  drift: ^2.34.2
+  sqlite3_flutter_libs: ^0.6.0+eol
+  path_provider: ^2.1.6
+  path: ^1.9.1
+  local_auth: ^3.0.2
+  flutter_secure_storage: ^10.3.1
+  flutter_validators: ^1.2.0
+  crypto: ^3.0.7
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  cryptography: ^2.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  riverpod_generator: ^4.0.4
+  build_runner: ^2.15.1
+  drift_dev: ^2.34.0
+  mockito: ^5.6.4
+  very_good_analysis: ^10.3.0
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  # Generates localization code from the .arb files in lib/l10n/.
+  generate: true
+
+  assets:
+    - assets/icons/
+    - assets/images/

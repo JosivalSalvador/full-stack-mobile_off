@@ -1,0 +1,15 @@
+{
+  "@@locale": "pt",
+
+  "appTitle": "Keymory",
+
+  "unlockScreenTitle": "Cofre Travado",
+
+  "unlockButtonLabel": "Destravar com biometria",
+
+  "unlockInProgress": "Autenticando...",
+
+  "unlockFailed": "Falha na autenticação. Tente novamente.",
+
+  "unlockBiometricsUnavailable": "Biometria não disponível neste dispositivo."
+}

@@ -1,0 +1,71 @@
+name: Build APK
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build signed release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - name: Set up Flutter (version from .fvmrc)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: .fvmrc
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Generate code (Drift/Riverpod)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # ============================================================
+      # A PARTIR DAQUI, PRECISA DE GITHUB SECRETS CONFIGURADOS.
+      # Vá em: Settings > Secrets and variables > Actions > New repository secret
+      #
+      # Secrets necessários:
+      #   ANDROID_KEYSTORE_BASE64  -> keystore .jks convertido pra base64
+      #   ANDROID_KEYSTORE_PASSWORD
+      #   ANDROID_KEY_ALIAS
+      #   ANDROID_KEY_PASSWORD
+      #
+      # Como gerar o keystore (rode local, uma vez só):
+      #   keytool -genkey -v -keystore upload-keystore.jks -storetype JKS \
+      #     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+      #
+      # Como converter pra base64 (Linux/macOS):
+      #   base64 -w 0 upload-keystore.jks > keystore_base64.txt
+      #   (cole o conteúdo desse arquivo no secret ANDROID_KEYSTORE_BASE64)
+      # ============================================================
+
+      - name: Decode keystore from secret
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=upload-keystore.jks" >> android/key.properties
+
+      - name: Build signed release APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk

@@ -1,0 +1,6 @@
+CREATE TABLE vault_metadata (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  salt TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
