@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Flutter (version from .fvmrc)
         uses: subosito/flutter-action@v2
@@ -40,3 +40,25 @@ jobs:
 
       - name: Run tests
         run: flutter test
+
+  auto_create_pr:
+    name: Create Pull Request to main
+    needs: analyze_and_test
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: dev
+          base: main
+          title: 'ci(auto): merge dev into main'
+          body: |
+            ## Automated Pull Request
+            This PR was automatically created by the CI workflow after all tests and checks passed on `dev`.
+          labels: |
+            automated pr
