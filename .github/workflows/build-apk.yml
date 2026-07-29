@@ -21,6 +21,7 @@ jobs:
         with:
           channel: stable
           flutter-version-file: .fvmrc
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
@@ -30,25 +31,6 @@ jobs:
 
       - name: Generate code (Drift/Riverpod)
         run: dart run build_runner build --delete-conflicting-outputs
-
-      # ============================================================
-      # A PARTIR DAQUI, PRECISA DE GITHUB SECRETS CONFIGURADOS.
-      # Vá em: Settings > Secrets and variables > Actions > New repository secret
-      #
-      # Secrets necessários:
-      #   ANDROID_KEYSTORE_BASE64  -> keystore .jks convertido pra base64
-      #   ANDROID_KEYSTORE_PASSWORD
-      #   ANDROID_KEY_ALIAS
-      #   ANDROID_KEY_PASSWORD
-      #
-      # Como gerar o keystore (rode local, uma vez só):
-      #   keytool -genkey -v -keystore upload-keystore.jks -storetype JKS \
-      #     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
-      #
-      # Como converter pra base64 (Linux/macOS):
-      #   base64 -w 0 upload-keystore.jks > keystore_base64.txt
-      #   (cole o conteúdo desse arquivo no secret ANDROID_KEYSTORE_BASE64)
-      # ============================================================
 
       - name: Decode keystore from secret
         run: |
@@ -62,10 +44,17 @@ jobs:
           echo "storeFile=upload-keystore.jks" >> android/key.properties
 
       - name: Build signed release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --build-number=${{ github.run_number }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
+          name: keymory-off-${{ github.run_number }}
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
