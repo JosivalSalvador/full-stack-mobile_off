@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - dev
-  pull_request:
-    branches:
-      - main
 
 jobs:
   analyze_and_test:
@@ -15,7 +12,7 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Flutter (version from .fvmrc)
         uses: subosito/flutter-action@v2
@@ -45,20 +42,20 @@ jobs:
   auto_create_pr:
     name: Create Pull Request to main
     needs: analyze_and_test
-    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Create Pull Request via GitHub CLI
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           EXISTING_PR=$(gh pr list --head dev --base main --state open --json number -q '.[0].number')
+          
           if [ -z "$EXISTING_PR" ]; then
             echo "Criando novo PR..."
             gh pr create \
