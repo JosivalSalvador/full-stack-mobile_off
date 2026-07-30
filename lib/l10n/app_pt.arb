@@ -11,5 +11,13 @@
 
   "unlockFailed": "Falha na autenticação. Tente novamente.",
 
-  "unlockBiometricsUnavailable": "Biometria não disponível neste dispositivo."
+  "unlockBiometricsUnavailable": "Biometria não disponível neste dispositivo.",
+
+  "unlockErrorNoHardware": "Nenhuma biometria ou PIN configurado neste dispositivo.",
+
+  "unlockErrorTooManyAttempts": "Muitas tentativas. Tente novamente mais tarde.",
+
+  "unlockErrorCancelled": "A autenticação foi cancelada.",
+
+  "unlockErrorUnknown": "Falha na autenticação. Tente novamente."
 }

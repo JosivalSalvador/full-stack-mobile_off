@@ -1,4 +1,3 @@
-import 'package:keymory_off/features/unlock/domain/models/unlock_status.dart';
 import 'package:keymory_off/features/unlock/domain/usecases/unlock_with_biometrics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,18 +10,26 @@ UnlockWithBiometrics unlockWithBiometrics(Ref ref) {
   return UnlockWithBiometrics();
 }
 
-/// Exposes the current [UnlockStatus] of the vault and provides the
+/// Exposes the current unlock state as an [AsyncValue] and provides the
 /// [unlock] action that the UI calls when the user taps the unlock button.
+///
+/// The wrapped `bool` is `false` while locked and `true` once unlocked, so
+/// the UI can tell "not yet attempted" apart from "successfully unlocked"
+/// — both of which would otherwise collapse into the same [AsyncData].
 @riverpod
 class Unlock extends _$Unlock {
   @override
-  UnlockStatus build() => const Locked();
+  FutureOr<bool> build() => false;
 
-  /// Triggers a biometric unlock attempt, updating [state] as it
-  /// progresses from [Unlocking] to either [Unlocked] or [Failed].
+  /// Triggers a biometric unlock attempt, updating [state] to
+  /// [AsyncLoading] while it runs, then to [AsyncData] (true) or
+  /// [AsyncError] carrying an [UnlockFailedException].
   Future<void> unlock() async {
-    state = const Unlocking();
+    state = const AsyncLoading<bool>();
     final usecase = ref.read(unlockWithBiometricsProvider);
-    state = await usecase();
+    state = await AsyncValue.guard<bool>(() async {
+      await usecase();
+      return true;
+    });
   }
 }

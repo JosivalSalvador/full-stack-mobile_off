@@ -133,6 +133,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Biometrics not available on this device.'**
   String get unlockBiometricsUnavailable;
+
+  /// Shown when UnlockFailureReason.noHardware occurs
+  ///
+  /// In en, this message translates to:
+  /// **'No biometrics or device PIN are set up on this device.'**
+  String get unlockErrorNoHardware;
+
+  /// Shown when UnlockFailureReason.tooManyAttempts occurs
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Try again later.'**
+  String get unlockErrorTooManyAttempts;
+
+  /// Shown when UnlockFailureReason.cancelled occurs
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication was cancelled.'**
+  String get unlockErrorCancelled;
+
+  /// Shown when UnlockFailureReason.unknown occurs
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. Try again.'**
+  String get unlockErrorUnknown;
 }
 
 class _AppLocalizationsDelegate

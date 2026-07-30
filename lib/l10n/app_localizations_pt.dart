@@ -26,4 +26,18 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get unlockBiometricsUnavailable =>
       'Biometria não disponível neste dispositivo.';
+
+  @override
+  String get unlockErrorNoHardware =>
+      'Nenhuma biometria ou PIN configurado neste dispositivo.';
+
+  @override
+  String get unlockErrorTooManyAttempts =>
+      'Muitas tentativas. Tente novamente mais tarde.';
+
+  @override
+  String get unlockErrorCancelled => 'A autenticação foi cancelada.';
+
+  @override
+  String get unlockErrorUnknown => 'Falha na autenticação. Tente novamente.';
 }

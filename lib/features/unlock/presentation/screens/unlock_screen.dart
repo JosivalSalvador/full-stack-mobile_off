@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:keymory_off/features/unlock/domain/models/unlock_status.dart';
+import 'package:keymory_off/features/unlock/domain/models/unlock_failure_reason.dart';
+import 'package:keymory_off/features/unlock/domain/usecases/unlock_with_biometrics.dart';
 import 'package:keymory_off/features/unlock/presentation/controllers/unlock_provider.dart';
 import 'package:keymory_off/features/unlock/presentation/widgets/biometric_button.dart';
 import 'package:keymory_off/l10n/app_localizations.dart';
@@ -8,16 +9,23 @@ import 'package:keymory_off/l10n/app_localizations.dart';
 /// The screen shown when the vault is locked, prompting the user to
 /// authenticate via [BiometricButton].
 ///
-/// Displays the localized error message from a Failed status, if present.
+/// Displays a localized error message when the unlock state holds an
+/// [UnlockFailedException].
 class UnlockScreen extends ConsumerWidget {
   /// Creates an [UnlockScreen].
   const UnlockScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final status = ref.watch(unlockProvider);
+    final state = ref.watch(unlockProvider);
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
+    final errorMessage = switch (state) {
+      AsyncError(:final error) when error is UnlockFailedException =>
+        _messageFor(error.reason, l10n),
+      _ => null,
+    };
 
     return Scaffold(
       body: SafeArea(
@@ -40,10 +48,10 @@ class UnlockScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 const BiometricButton(),
-                if (status is Failed) ...[
+                if (errorMessage != null) ...[
                   const SizedBox(height: 16),
                   Text(
-                    status.reason,
+                    errorMessage,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.error,
                     ),
@@ -56,5 +64,14 @@ class UnlockScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _messageFor(UnlockFailureReason reason, AppLocalizations l10n) {
+    return switch (reason) {
+      UnlockFailureReason.noHardware => l10n.unlockErrorNoHardware,
+      UnlockFailureReason.tooManyAttempts => l10n.unlockErrorTooManyAttempts,
+      UnlockFailureReason.cancelled => l10n.unlockErrorCancelled,
+      UnlockFailureReason.unknown => l10n.unlockErrorUnknown,
+    };
   }
 }

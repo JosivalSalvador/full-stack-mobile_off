@@ -1,5 +1,15 @@
-import 'package:keymory_off/features/unlock/domain/models/unlock_status.dart';
+import 'package:keymory_off/features/unlock/domain/models/unlock_failure_reason.dart';
 import 'package:local_auth/local_auth.dart';
+
+/// Thrown when a biometric unlock attempt fails, carrying the specific
+/// [reason] so the caller can decide how to respond.
+class UnlockFailedException implements Exception {
+  /// Creates an [UnlockFailedException] with the given [reason].
+  const UnlockFailedException(this.reason);
+
+  /// The specific reason this unlock attempt failed.
+  final UnlockFailureReason reason;
+}
 
 /// Orchestrates the vault unlock flow: verifies that local authentication
 /// is available on this device, then triggers the system's native
@@ -7,7 +17,7 @@ import 'package:local_auth/local_auth.dart';
 ///
 /// This use case does not touch the database or the encryption key directly
 /// — it only answers "did the device confirm this is the owner?". Callers
-/// are responsible for what happens after a successful [Unlocked] result.
+/// are responsible for what happens after a successful unlock.
 class UnlockWithBiometrics {
   /// Creates an [UnlockWithBiometrics] use case, optionally overriding the
   /// [LocalAuthentication] instance (mainly useful for testing).
@@ -17,13 +27,11 @@ class UnlockWithBiometrics {
   final LocalAuthentication _localAuth;
 
   /// Attempts to unlock the vault using the device's local authentication.
-  /// Never throws — every failure path is represented as a [Failed] status.
-  Future<UnlockStatus> call() async {
+  /// Throws [UnlockFailedException] on any failure path.
+  Future<void> call() async {
     final isSupported = await _localAuth.isDeviceSupported();
     if (!isSupported) {
-      return const Failed(
-        'This device does not support local authentication.',
-      );
+      throw const UnlockFailedException(UnlockFailureReason.noHardware);
     }
 
     try {
@@ -31,22 +39,22 @@ class UnlockWithBiometrics {
         localizedReason: 'Authenticate to unlock your vault',
       );
 
-      return didAuthenticate
-          ? const Unlocked()
-          : const Failed('Authentication was cancelled.');
+      if (!didAuthenticate) {
+        throw const UnlockFailedException(UnlockFailureReason.cancelled);
+      }
     } on LocalAuthException catch (e) {
-      return Failed(_messageFor(e.code));
+      throw UnlockFailedException(_reasonFor(e.code));
     }
   }
 
-  String _messageFor(LocalAuthExceptionCode code) {
+  UnlockFailureReason _reasonFor(LocalAuthExceptionCode code) {
     return switch (code) {
       LocalAuthExceptionCode.noBiometricHardware =>
-        'No biometrics or device PIN are set up on this device.',
+        UnlockFailureReason.noHardware,
       LocalAuthExceptionCode.temporaryLockout ||
       LocalAuthExceptionCode.biometricLockout =>
-        'Too many attempts. Try again later.',
-      _ => 'Authentication failed. Try again.',
+        UnlockFailureReason.tooManyAttempts,
+      _ => UnlockFailureReason.unknown,
     };
   }
 }
