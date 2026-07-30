@@ -76,7 +76,7 @@ jobs:
                 printf "\n**Total Coverage: %.2f%%**\n", total_pct >> "'$GITHUB_STEP_SUMMARY'";
                 
                 # Altere 0 para a porcentagem minima desejada (ex: 80)
-                MIN_COV=0
+                MIN_COV=80
                 if (total_pct < MIN_COV) {
                   printf "Coverage (%.2f%%) is below minimum threshold (%d%%)\n", total_pct, MIN_COV;
                   exit 1;
