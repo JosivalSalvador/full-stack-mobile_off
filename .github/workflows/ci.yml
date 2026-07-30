@@ -37,7 +37,13 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
+
+      - name: Install lcov
+        run: sudo apt-get update && sudo apt-get install -y lcov
+
+      - name: Show coverage summary
+        run: lcov --list coverage/lcov.info
 
   auto_create_pr:
     name: Create Pull Request to main
