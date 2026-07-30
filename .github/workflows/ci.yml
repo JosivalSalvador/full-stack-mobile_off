@@ -39,11 +39,11 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
-      - name: Install lcov
-        run: sudo apt-get update && sudo apt-get install -y lcov
-
-      - name: Show coverage summary
-        run: lcov --list coverage/lcov.info
+      - name: Check coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v3
+        with:
+          path: coverage/lcov.info
+          min_coverage: 0
 
   auto_create_pr:
     name: Create Pull Request to main
