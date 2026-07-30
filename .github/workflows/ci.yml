@@ -37,7 +37,10 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
+
+      - name: Show coverage summary
+        run: lcov --list coverage/lcov.info
 
   auto_create_pr:
     name: Create Pull Request to main
