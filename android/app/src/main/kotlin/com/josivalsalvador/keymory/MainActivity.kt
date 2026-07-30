@@ -1,5 +1,3 @@
-package com.example.keymory_off
-
+package com.josivalsalvador.keymory
 import io.flutter.embedding.android.FlutterFragmentActivity
-
 class MainActivity : FlutterFragmentActivity()
