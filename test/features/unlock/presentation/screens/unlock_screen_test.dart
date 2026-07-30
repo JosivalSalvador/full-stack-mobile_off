@@ -7,6 +7,7 @@ import 'package:keymory_off/features/unlock/presentation/controllers/unlock_prov
 import 'package:keymory_off/features/unlock/presentation/screens/unlock_screen.dart';
 import 'package:keymory_off/features/unlock/presentation/widgets/biometric_button.dart';
 import 'package:keymory_off/l10n/app_localizations.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../domain/usecases/unlock_with_biometrics_test.mocks.dart';
@@ -75,5 +76,37 @@ void main() {
       find.text('No biometrics or device PIN are set up on this device.'),
       findsNothing,
     );
+  });
+
+  testWidgets('shows the generic error message for an unknown failure', (
+    tester,
+  ) async {
+    final mockLocalAuth = MockLocalAuthentication();
+    when(mockLocalAuth.isDeviceSupported()).thenAnswer((_) async => true);
+    when(
+      mockLocalAuth.authenticate(
+        localizedReason: anyNamed('localizedReason'),
+      ),
+    ).thenThrow(
+      const LocalAuthException(code: LocalAuthExceptionCode.unknownError),
+    );
+
+    await tester.pumpWidget(
+      _buildApp(
+        ProviderScope(
+          overrides: [
+            unlockWithBiometricsProvider.overrideWithValue(
+              UnlockWithBiometrics(localAuth: mockLocalAuth),
+            ),
+          ],
+          child: const UnlockScreen(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(BiometricButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Authentication failed. Try again.'), findsOneWidget);
   });
 }
