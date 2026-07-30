@@ -39,12 +39,51 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
-      - name: Check coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v3
-        with:
-          path: coverage/lcov.info
-          min_coverage: 0
-          exclude: '**/*.g.dart'
+      - name: Report and enforce coverage
+        run: |
+          sudo apt-get install -y lcov
+          
+          # Remove arquivos gerados e de localizacao do relatorio
+          lcov --remove coverage/lcov.info '**/*.g.dart' '**/l10n/*.dart' -o coverage/lcov_filtered.info
+
+          # Escreve a tabela no resumo oficial do job (GitHub Job Summary)
+          echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Coverage | Uncovered Lines |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :---: | :--- |" >> $GITHUB_STEP_SUMMARY
+
+          awk -F':' '
+            /^SF:/ { file = $2 }
+            /^DA:/ {
+              split($2, data, ","); line = data[1]; hits = data[2];
+              total_lines[file]++;
+              if (hits == 0) {
+                uncovered[file] = uncovered[file] (uncovered[file] ? ", " : "") line;
+              } else {
+                covered[file]++;
+              }
+            }
+            END {
+              tot_lines = 0; tot_cov = 0;
+              for (f in total_lines) {
+                pct = (covered[f] / total_lines[f]) * 100;
+                tot_lines += total_lines[f];
+                tot_cov += covered[f];
+                miss = uncovered[f] ? uncovered[f] : "-";
+                printf "| `%s` | %.1f%% | %s |\n", f, pct, miss >> "'$GITHUB_STEP_SUMMARY'";
+              }
+              if (tot_lines > 0) {
+                total_pct = (tot_cov / tot_lines) * 100;
+                printf "\n**Total Coverage: %.2f%%**\n", total_pct >> "'$GITHUB_STEP_SUMMARY'";
+                
+                # Altere 0 para a porcentagem minima desejada (ex: 80)
+                MIN_COV=0
+                if (total_pct < MIN_COV) {
+                  printf "Coverage (%.2f%%) is below minimum threshold (%d%%)\n", total_pct, MIN_COV;
+                  exit 1;
+                }
+              }
+            }
+          ' coverage/lcov_filtered.info
 
   auto_create_pr:
     name: Create Pull Request to main
