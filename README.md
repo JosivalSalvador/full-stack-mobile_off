@@ -99,19 +99,27 @@ dois passos:
    reconhecimento facial ou o PIN/senha do dispositivo, dependendo do que
    estiver configurado no aparelho.
 
-O usecase nunca lança exceção: toda falha vira um `UnlockStatus.Failed` com
-uma mensagem já traduzida para o usuário (sem hardware biométrico, muitas
-tentativas erradas, autenticação cancelada, etc). Ele não sabe nada sobre
-banco de dados nem sobre a chave de criptografia, só responde "o dispositivo
-confirmou que é o dono?".
+Toda falha vira uma `UnlockFailedException` carregando um `UnlockFailureReason`
+tipado (sem hardware biométrico, muitas tentativas erradas, autenticação
+cancelada, etc). O usecase não sabe nada sobre banco de dados nem sobre a
+chave de criptografia, só responde "o dispositivo confirmou que é o dono?".
 
-### Estado da tela como sealed class
+### Estado da tela como AsyncValue
 
-`UnlockStatus`, em `domain/models`, é uma sealed class com quatro estados:
-`Locked`, `Unlocking`, `Unlocked` e `Failed(reason)`. Só `Failed` carrega
-dado extra (o motivo, como texto), o resto é estado vazio. O provider
-Riverpod (`unlock_provider.dart`, gerado com `riverpod_generator`) expõe
-esse estado e o método `unlock()`, que a UI chama diretamente.
+O provider Riverpod `Unlock` (`unlock_provider.dart`, gerado com
+`riverpod_generator`) expõe o estado da tela como um `AsyncValue<bool>`: o
+`bool` embrulhado é `false` enquanto travado e `true` assim que destravado,
+o que permite à UI distinguir "ainda não tentou" de "destravou com
+sucesso" — do contrário os dois cairiam no mesmo `AsyncData`. Durante a
+tentativa o estado vira `AsyncLoading`; em caso de falha vira `AsyncError`
+carregando uma `UnlockFailedException`.
+
+`UnlockFailedException`, em `domain/usecases`, guarda um `UnlockFailureReason`
+tipado — enum em `domain/models` com os valores `noHardware`,
+`tooManyAttempts`, `cancelled` e `unknown`. A UI lê esse `reason` para
+decidir a mensagem de erro certa, em vez de depender de uma string solta
+vinda da camada de domínio. O provider expõe também o método `unlock()`,
+que a UI chama diretamente.
 
 ### Internacionalização
 
@@ -255,10 +263,10 @@ test/
 
 Cada arquivo com lógica dentro de `lib/core` e `lib/features` tem seu par de
 teste no mesmo caminho relativo dentro de `test/`. As únicas exceções são
-arquivos sem lógica própria a testar: `main.dart`, `unlock_status.dart` (só
-definição de tipos) e `app_theme.dart` (só monta `ThemeData`).
+arquivos sem lógica própria a testar: `main.dart` e `app_theme.dart` (só
+monta `ThemeData`).
 
-Os nomes concretos de cada classe do exemplo (`UnlockStatus`,
+Os nomes concretos de cada classe do exemplo (`UnlockFailureReason`,
 `KeyDerivation`, `VaultRepository`, etc.) estão descritos na seção
 "O que já funciona" acima, não repetidos aqui: esta árvore mostra o
 formato que qualquer feature nova segue, não o conteúdo específico da
@@ -346,6 +354,6 @@ O build de release exige quatro secrets configurados no repositório
 | `ANDROID_KEY_PASSWORD` | Senha do alias |
 
 O keystore de assinatura nunca é gerado nem usado localmente, todo `.apk` de
-release nasce exclusivamente via CI. `android/.gitignore` protege
-`key.properties` e qualquer `*.jks`/`*.keystore` de ir parar no repositório
-por engano.
+release nasce exclusivamente via CI. Tanto o `.gitignore` da raiz quanto o
+de `android/` protegem `key.properties` e qualquer `*.jks`/`*.keystore` de
+ir parar no repositório por engano.

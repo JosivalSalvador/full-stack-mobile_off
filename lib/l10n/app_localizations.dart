@@ -116,24 +116,6 @@ abstract class AppLocalizations {
   /// **'Unlock with biometrics'**
   String get unlockButtonLabel;
 
-  /// Shown while biometric authentication is in progress
-  ///
-  /// In en, this message translates to:
-  /// **'Authenticating...'**
-  String get unlockInProgress;
-
-  /// Shown when biometric authentication fails
-  ///
-  /// In en, this message translates to:
-  /// **'Authentication failed. Try again.'**
-  String get unlockFailed;
-
-  /// Shown when the device has no biometric hardware or none is enrolled
-  ///
-  /// In en, this message translates to:
-  /// **'Biometrics not available on this device.'**
-  String get unlockBiometricsUnavailable;
-
   /// Shown when UnlockFailureReason.noHardware occurs
   ///
   /// In en, this message translates to:

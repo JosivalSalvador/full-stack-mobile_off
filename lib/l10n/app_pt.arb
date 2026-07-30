@@ -7,12 +7,6 @@
 
   "unlockButtonLabel": "Destravar com biometria",
 
-  "unlockInProgress": "Autenticando...",
-
-  "unlockFailed": "Falha na autenticação. Tente novamente.",
-
-  "unlockBiometricsUnavailable": "Biometria não disponível neste dispositivo.",
-
   "unlockErrorNoHardware": "Nenhuma biometria ou PIN configurado neste dispositivo.",
 
   "unlockErrorTooManyAttempts": "Muitas tentativas. Tente novamente mais tarde.",
