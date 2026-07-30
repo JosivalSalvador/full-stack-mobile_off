@@ -59,7 +59,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('This device does not support local authentication.'),
+      find.text('No biometrics or device PIN are set up on this device.'),
       findsOneWidget,
     );
   });
@@ -72,7 +72,7 @@ void main() {
     );
 
     expect(
-      find.text('This device does not support local authentication.'),
+      find.text('No biometrics or device PIN are set up on this device.'),
       findsNothing,
     );
   });

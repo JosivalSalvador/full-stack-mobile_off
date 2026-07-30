@@ -64,17 +64,29 @@ final class UnlockWithBiometricsProvider
 String _$unlockWithBiometricsHash() =>
     r'8c38cfbb4c7629112e6f4de703f0602392679214';
 
-/// Exposes the current [UnlockStatus] of the vault and provides the
+/// Exposes the current unlock state as an [AsyncValue] and provides the
 /// [unlock] action that the UI calls when the user taps the unlock button.
+///
+/// The wrapped `bool` is `false` while locked and `true` once unlocked, so
+/// the UI can tell "not yet attempted" apart from "successfully unlocked"
+/// — both of which would otherwise collapse into the same [AsyncData].
 
 @ProviderFor(Unlock)
 final unlockProvider = UnlockProvider._();
 
-/// Exposes the current [UnlockStatus] of the vault and provides the
+/// Exposes the current unlock state as an [AsyncValue] and provides the
 /// [unlock] action that the UI calls when the user taps the unlock button.
-final class UnlockProvider extends $NotifierProvider<Unlock, UnlockStatus> {
-  /// Exposes the current [UnlockStatus] of the vault and provides the
+///
+/// The wrapped `bool` is `false` while locked and `true` once unlocked, so
+/// the UI can tell "not yet attempted" apart from "successfully unlocked"
+/// — both of which would otherwise collapse into the same [AsyncData].
+final class UnlockProvider extends $AsyncNotifierProvider<Unlock, bool> {
+  /// Exposes the current unlock state as an [AsyncValue] and provides the
   /// [unlock] action that the UI calls when the user taps the unlock button.
+  ///
+  /// The wrapped `bool` is `false` while locked and `true` once unlocked, so
+  /// the UI can tell "not yet attempted" apart from "successfully unlocked"
+  /// — both of which would otherwise collapse into the same [AsyncData].
   UnlockProvider._()
     : super(
         from: null,
@@ -92,32 +104,28 @@ final class UnlockProvider extends $NotifierProvider<Unlock, UnlockStatus> {
   @$internal
   @override
   Unlock create() => Unlock();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UnlockStatus value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UnlockStatus>(value),
-    );
-  }
 }
 
-String _$unlockHash() => r'33a4e0df6b36283f938e2b336ff88f9f0ae5ccd4';
+String _$unlockHash() => r'12401fdb17d7767f06f36b38ea317f940175ce3c';
 
-/// Exposes the current [UnlockStatus] of the vault and provides the
+/// Exposes the current unlock state as an [AsyncValue] and provides the
 /// [unlock] action that the UI calls when the user taps the unlock button.
+///
+/// The wrapped `bool` is `false` while locked and `true` once unlocked, so
+/// the UI can tell "not yet attempted" apart from "successfully unlocked"
+/// — both of which would otherwise collapse into the same [AsyncData].
 
-abstract class _$Unlock extends $Notifier<UnlockStatus> {
-  UnlockStatus build();
+abstract class _$Unlock extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<UnlockStatus, UnlockStatus>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<UnlockStatus, UnlockStatus>,
-              UnlockStatus,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

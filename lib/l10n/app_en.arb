@@ -29,5 +29,25 @@
   "unlockBiometricsUnavailable": "Biometrics not available on this device.",
   "@unlockBiometricsUnavailable": {
     "description": "Shown when the device has no biometric hardware or none is enrolled"
+  },
+
+  "unlockErrorNoHardware": "No biometrics or device PIN are set up on this device.",
+  "@unlockErrorNoHardware": {
+    "description": "Shown when UnlockFailureReason.noHardware occurs"
+  },
+
+  "unlockErrorTooManyAttempts": "Too many attempts. Try again later.",
+  "@unlockErrorTooManyAttempts": {
+    "description": "Shown when UnlockFailureReason.tooManyAttempts occurs"
+  },
+
+  "unlockErrorCancelled": "Authentication was cancelled.",
+  "@unlockErrorCancelled": {
+    "description": "Shown when UnlockFailureReason.cancelled occurs"
+  },
+
+  "unlockErrorUnknown": "Authentication failed. Try again.",
+  "@unlockErrorUnknown": {
+    "description": "Shown when UnlockFailureReason.unknown occurs"
   }
 }
