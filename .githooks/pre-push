@@ -1,0 +1,45 @@
+#!/bin/sh
+# pre-push: regenera codigo (l10n + build_runner), confere se bate com o que
+# foi commitado, e so entao roda os testes. Espelha os passos do ci.yml.
+
+if command -v fvm >/dev/null 2>&1 && [ -f .fvmrc ]; then
+  FLUTTER="fvm flutter"
+  DART="fvm dart"
+else
+  FLUTTER="flutter"
+  DART="dart"
+fi
+
+GENERATED_PATHS="*.g.dart lib/l10n/app_localizations*.dart"
+
+echo "Regenerando localizacoes..."
+$FLUTTER gen-l10n > /dev/null
+
+echo "Regenerando codigo (Drift/Riverpod)..."
+$DART run build_runner build --delete-conflicting-outputs > /dev/null
+
+DIFF=$(git status --porcelain -- $GENERATED_PATHS)
+
+if [ -n "$DIFF" ]; then
+  echo ""
+  echo "Codigo gerado ficou diferente do que esta commitado:"
+  echo "$DIFF"
+  echo ""
+  echo "Voce esqueceu de rodar build_runner/gen-l10n antes de commitar."
+  echo "Rode:"
+  echo "  $FLUTTER gen-l10n"
+  echo "  $DART run build_runner build --delete-conflicting-outputs"
+  echo "confira o diff, e commite de novo."
+  git checkout -- $GENERATED_PATHS 2>/dev/null
+  exit 1
+fi
+
+echo "Codigo gerado confere. Rodando testes..."
+$FLUTTER test
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Testes falharam. Push bloqueado."
+  exit 1
+fi
+
+exit 0
