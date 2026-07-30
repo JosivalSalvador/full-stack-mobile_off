@@ -18,16 +18,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unlockButtonLabel => 'Destravar com biometria';
 
   @override
-  String get unlockInProgress => 'Autenticando...';
-
-  @override
-  String get unlockFailed => 'Falha na autenticação. Tente novamente.';
-
-  @override
-  String get unlockBiometricsUnavailable =>
-      'Biometria não disponível neste dispositivo.';
-
-  @override
   String get unlockErrorNoHardware =>
       'Nenhuma biometria ou PIN configurado neste dispositivo.';
 

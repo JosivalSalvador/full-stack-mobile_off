@@ -16,21 +16,6 @@
     "description": "Label for the button that triggers biometric authentication"
   },
 
-  "unlockInProgress": "Authenticating...",
-  "@unlockInProgress": {
-    "description": "Shown while biometric authentication is in progress"
-  },
-
-  "unlockFailed": "Authentication failed. Try again.",
-  "@unlockFailed": {
-    "description": "Shown when biometric authentication fails"
-  },
-
-  "unlockBiometricsUnavailable": "Biometrics not available on this device.",
-  "@unlockBiometricsUnavailable": {
-    "description": "Shown when the device has no biometric hardware or none is enrolled"
-  },
-
   "unlockErrorNoHardware": "No biometrics or device PIN are set up on this device.",
   "@unlockErrorNoHardware": {
     "description": "Shown when UnlockFailureReason.noHardware occurs"

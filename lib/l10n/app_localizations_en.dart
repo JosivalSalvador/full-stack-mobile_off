@@ -18,16 +18,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unlockButtonLabel => 'Unlock with biometrics';
 
   @override
-  String get unlockInProgress => 'Authenticating...';
-
-  @override
-  String get unlockFailed => 'Authentication failed. Try again.';
-
-  @override
-  String get unlockBiometricsUnavailable =>
-      'Biometrics not available on this device.';
-
-  @override
   String get unlockErrorNoHardware =>
       'No biometrics or device PIN are set up on this device.';
 
