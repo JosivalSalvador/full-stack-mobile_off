@@ -1,0 +1,33 @@
+#!/bin/sh
+# pre-commit: formata os .dart staged (exceto gerados) e roda flutter analyze.
+
+if command -v fvm >/dev/null 2>&1 && [ -f .fvmrc ]; then
+  FLUTTER="fvm flutter"
+  DART="fvm dart"
+else
+  FLUTTER="flutter"
+  DART="dart"
+fi
+
+STAGED_DART=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep '\.dart$' \
+  | grep -v '\.g\.dart$' \
+  | grep -v 'lib/l10n/app_localizations.*\.dart$')
+
+if [ -z "$STAGED_DART" ]; then
+  exit 0
+fi
+
+echo "Formatando arquivos staged..."
+echo "$STAGED_DART" | xargs $DART format
+echo "$STAGED_DART" | xargs git add
+
+echo "Rodando flutter analyze..."
+$FLUTTER analyze
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "flutter analyze encontrou problemas. Commit bloqueado."
+  exit 1
+fi
+
+exit 0

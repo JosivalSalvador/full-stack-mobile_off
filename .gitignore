@@ -46,3 +46,7 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/flutter_sdk
+
+
+android/key.properties
+android/app/upload-keystore.jks
