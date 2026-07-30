@@ -44,6 +44,7 @@ jobs:
         with:
           path: coverage/lcov.info
           min_coverage: 0
+          exclude: '**/*.g.dart'
 
   auto_create_pr:
     name: Create Pull Request to main
